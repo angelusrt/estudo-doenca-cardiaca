@@ -22,14 +22,13 @@ df['target'] = heart_disease.data.targets['num']
 
 ## Observando Dataset
 
-Nota-se valores numericos com graus distintos.
+Nota-se valores numéricos com graus distintos.
 
 ```{python}
 df.head(10)
 ```
 
 ## Entendo features
-
 
 ```{python}
 df = df.sort_values(by='target', ignore_index=True)
@@ -51,6 +50,7 @@ df = df.fillna(0)
 ```
 
 [TODO: revisar preenchimento de valores nulos.]
+[TODO: analisar distribuição de classes para verificar enviesamento.]
 
 ## Normalizando atribudos
 
@@ -82,20 +82,61 @@ pyplot.matshow(df_norm.corr())
 pyplot.show()
 ```
 
+## Explorando outros gráficos
+
+Gráfico de histograma:
+
+```{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+#sns.pairplot(df, hue="target")
+df.hist(figsize=(12, 8), bins=20)
+plt.tight_layout()
+plt.show()
+```
+
+Gráfico de disperção:
+
+```{python}
+sns.stripplot(data=df_norm.drop(columns=["target"]), orient="h")
+plt.show()
+```
+
+Gráfico box-plot:
+
+```{python}
+sns.boxplot(data=df)
+plt.show()
+```
+
+Gráfico de violino:
+
+```{python}
+sns.violinplot(data=df)
+plt.show()
+```
+
 ## Explorando árvores de decisão
 
 ```{python}
 from sklearn import tree
-
-clf = tree.DecisionTreeClassifier()
+from sklearn.metrics import accuracy_score
 
 df = df_norm.drop(columns=['target'])
-clf = clf.fit(df, y)
 
-tree.plot_tree(clf) 
+clf = tree.DecisionTreeClassifier()
+model = clf.fit(df, y)
+tree.plot_tree(model) 
+
+prediction = model.predict(df)
+acc = accuracy_score(y, prediction)
+print(f"Acurácia: {acc:0.2f}")
 ```
 
 [TODO: melhorar visualização]
+[TODO: fazer divisão de dataset de treino e validação]
 
 ## Explorando Nearest Neighbours
 
@@ -107,6 +148,23 @@ nbrs = NearestNeighbors(n_neighbors=2, algorithm='ball_tree')
 nbrs = nbrs.fit(df)
 
 distances, indices = nbrs.kneighbors(df)
+```
+
+```{python}
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score
+
+clf = Pipeline(
+    steps=[("scaler", StandardScaler()), ("knn", KNeighborsClassifier(n_neighbors=11))]
+)
+
+model = clf.fit(df, y)
+prediction = model.predict(df)
+acc = accuracy_score(y, prediction)
+
+print(f"Acurácia: {acc:0.2f}")
 ```
 
 [TODO: melhorar visualização]
