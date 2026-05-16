@@ -17,7 +17,13 @@ Nossos patrocinadores são:
 
 ---
 
-[TODO: Listar bases de dados que poderiam compor nosso estoque]
+Algumas outras bases interessantes:
+- (Marts de Medicina)[https://physionet.org/content/mimiciv/2.2/]
+- (Predição de Ataque Cardíaco)[https://www.kaggle.com/datasets/fedesoriano/heart-failure-prediction/data]
+- (Casos de Ataque Cardíaco)[https://archive.ics.uci.edu/dataset/519/heart+failure+clinical+records]
+- (Estudo cardíaco de Framingham)[https://www.kaggle.com/datasets/aasheesh200/framingham-heart-study-dataset]
+
+[TODO: Explorar estes datasets]
 
 ---
 
