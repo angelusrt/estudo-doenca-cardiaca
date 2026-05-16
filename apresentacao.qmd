@@ -1,19 +1,29 @@
-# Estudo sobre doenças cardíacas
+---
+title: "Estudo de doenças cardíacas"
+author: "Angelus, Rafael, José, Matheus"
+format: revealjs
+---
 
-Esse repositório se refere a uma análise exploratória da seguinte base de dados.
-
-(> Estudo Usado)[https://archive.ics.uci.edu/dataset/45/heart+disease]
-
-O estudo se refere a uma prediçâo sobre doenças cardíacas com base em 4 datasets diferentes (Cleveland, Hungary, Switzerland, VA Long Beach - Cleveland é o mais promissor), contendo 76 atributos (14 usaveis)
+O estudo se refere a uma prediçâo sobre doenças cardíacas com base em 4 datasets diferentes 
+(Cleveland, Hungary, Switzerland, VA Long Beach - Cleveland é o mais promissor), contendo 76 atributos (14 usaveis)
 
 O modelo deve prever um número de 0 a 4, usando como base: idade, Sexo,  Dor no Peito, Pressão sanguinea, taxa de colesterol, etc.
 
-O estudo compara a performance entre 5 modelos:
-- XGBoost
-- Support Vector
-- Random Forest
-- NN
-- Regressão Logística
+---
+
+Nossos patrocinadores são:
+- Desenvolvedores de Wearables de Saúde
+- Clínicas
+
+---
+
+[TODO: Listar bases de dados que poderiam compor nosso estoque]
+
+---
+
+[TODO: Pesquisar descobertas anteriores]
+
+---
 
 Atributos usados:
 
@@ -30,10 +40,10 @@ Atributos usados:
 | exang    | Categórico | Angina induzida por exercício                                         |         |
 | oldpeak  | Inteiro    | Depressão do segmento ST induzida por exercício em relação ao repouso |         |
 
-Nossos patrocinadores são:
-- Desenvolvedores de Wearables de Saúde
-- Clínicas
+---
 
-[TODO: descrever processo de limpeza, transformação]
-[TODO: elaborar gráficos usando algumas dimensões]
-[TODO: ...]
+[TODO: Descrever processo de redução, limpeza, transformação - 3 slides]
+
+[TODO: Elaborar gráficos de histograma, dispersão, e boxplot usando algumas dimensões - 3 slides]
+
+[TODO: Executar árvore de decisão e k-means - 2 slides]

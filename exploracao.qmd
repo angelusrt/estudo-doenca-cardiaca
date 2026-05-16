@@ -1,0 +1,62 @@
+# Exploração do dataset de Doenças Cardíacas
+
+(Dataset vem desse link)[https://archive.ics.uci.edu/dataset/45/heart+disease]
+
+## Carregando Dataset
+
+```{python}
+import pandas as pd
+
+from matplotlib import pyplot
+from ucimlrepo import fetch_ucirepo 
+
+# fetch dataset 
+heart_disease = fetch_ucirepo(id=45) 
+  
+# data (as pandas dataframes) 
+X = heart_disease.data.features 
+y = heart_disease.data.targets 
+
+df = X.copy()
+df['target'] = y['num']
+```
+
+## Entendo features
+
+Nota-se valores numericos com graus distintos.
+
+```{python}
+df.head(10)
+```
+
+Níveis de colesterol não foram um bom previsor. 
+
+```{python}
+df = df.sort_values(by='target', ignore_index=True)
+
+df.plot(
+    y=list(df.columns),
+    secondary_y=['target']
+)
+```
+
+## Normalizando atribudos
+
+```{python}
+df_norm = (df - df.min()) / (df.max() - df.min())
+```
+
+## Analisando matriz de correlação
+
+```{python}
+df_norm.columns.tolist()
+```
+
+```{python}
+df_norm = (df - df.min()) / (df.max() - df.min())
+
+pyplot.matshow(df_norm.corr())
+pyplot.show()
+```
+
+## Explorando atributos de maior correlação
