@@ -14,14 +14,13 @@ from ucimlrepo import fetch_ucirepo
 heart_disease = fetch_ucirepo(id=45) 
   
 # data (as pandas dataframes) 
-X = heart_disease.data.features 
 y = heart_disease.data.targets 
 
-df = X.copy()
-df['target'] = y['num']
+df = heart_disease.data.features.copy()
+df['target'] = heart_disease.data.targets['num']
 ```
 
-## Entendo features
+## Observando Dataset
 
 Nota-se valores numericos com graus distintos.
 
@@ -29,7 +28,8 @@ Nota-se valores numericos com graus distintos.
 df.head(10)
 ```
 
-Níveis de colesterol não foram um bom previsor. 
+## Entendo features
+
 
 ```{python}
 df = df.sort_values(by='target', ignore_index=True)
@@ -40,7 +40,21 @@ df.plot(
 )
 ```
 
+## Analisando valores nulos
+
+Não existem muitos valores nulos.
+
+```{python}
+quantidade_nulos = df.isna().sum()
+
+df = df.fillna(0)
+```
+
+[TODO: revisar preenchimento de valores nulos.]
+
 ## Normalizando atribudos
+
+Nós vamos usar a fórmula min-max para normalizar os atributos quantitativos para um valor entre 0 e 1.
 
 ```{python}
 df_norm = (df - df.min()) / (df.max() - df.min())
@@ -59,4 +73,40 @@ pyplot.matshow(df_norm.corr())
 pyplot.show()
 ```
 
-## Explorando atributos de maior correlação
+Frequência cardíaca máxima não foi um bom preditor.
+
+```{python}
+df_norm = df_norm.drop(columns=['thalach'])
+
+pyplot.matshow(df_norm.corr())
+pyplot.show()
+```
+
+## Explorando árvores de decisão
+
+```{python}
+from sklearn import tree
+
+clf = tree.DecisionTreeClassifier()
+
+df = df_norm.drop(columns=['target'])
+clf = clf.fit(df, y)
+
+tree.plot_tree(clf) 
+```
+
+[TODO: melhorar visualização]
+
+## Explorando Nearest Neighbours
+
+```{python}
+from sklearn.neighbors import NearestNeighbors
+import numpy as np
+
+nbrs = NearestNeighbors(n_neighbors=2, algorithm='ball_tree')
+nbrs = nbrs.fit(df)
+
+distances, indices = nbrs.kneighbors(df)
+```
+
+[TODO: melhorar visualização]
