@@ -48,8 +48,16 @@ Atributos usados:
 
 ---
 
+[TODO: adicionar slide contendo um head(10)]
+
+---
+
 [TODO: Descrever processo de redução, limpeza, transformação - 3 slides]
 
+---
+
 [TODO: Elaborar gráficos de histograma, dispersão, e boxplot usando algumas dimensões - 3 slides]
+
+---
 
 [TODO: Executar árvore de decisão e k-means - 2 slides]

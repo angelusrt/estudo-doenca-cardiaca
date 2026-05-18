@@ -2,7 +2,9 @@
 
 Esse repositório se refere a uma análise exploratória da seguinte base de dados.
 
-(> Estudo Usado)[https://archive.ics.uci.edu/dataset/45/heart+disease]
+[> Estudo Usado](https://archive.ics.uci.edu/dataset/45/heart+disease)
+
+## Sobre o estudo
 
 O estudo se refere a uma prediçâo sobre doenças cardíacas com base em 4 datasets diferentes (Cleveland, Hungary, Switzerland, VA Long Beach - Cleveland é o mais promissor), contendo 76 atributos (14 usaveis)
 
@@ -15,7 +17,7 @@ O estudo compara a performance entre 5 modelos:
 - NN
 - Regressão Logística
 
-Atributos usados:
+### Atributos usados
 
 | Variável | Tipo       | Descrição                                                             | Unidade |
 | -------- | ---------- | --------------------------------------------------------------------- | ------- |
@@ -30,10 +32,30 @@ Atributos usados:
 | exang    | Categórico | Angina induzida por exercício                                         |         |
 | oldpeak  | Inteiro    | Depressão do segmento ST induzida por exercício em relação ao repouso |         |
 
-Nossos patrocinadores são:
-- Desenvolvedores de Wearables de Saúde
-- Clínicas
+## Nosso objetivo
 
-[TODO: descrever processo de limpeza, transformação]
-[TODO: elaborar gráficos usando algumas dimensões]
-[TODO: ...]
+Fazer uma análise exploratória do estudo para conduzir um algoritmo ML 
+e enteder melhor o _storytelling_ que conta o dado.
+
+Esse estudo universitário deve conter:
+- Descrição do problema
+- Lista de Stakeholders
+- Descobertas anteriores relacionadas ao dataset
+- Dicionário de dados
+- Descrição dos atributos utilizados
+- Pré-processamento do dado (redução, limpeza, transformação) e relatório
+- Elaborar gráficos (histograma, dispersão e boxplot) de um atributo do projeto
+- Uso de ML: Árvore de decisão e K-means
+- Contar um bom story-tellings com o dado
+
+## Setup
+
+```bash
+git clone https://github.com/angelusrt/estudo-doenca-cardiaca.git
+cd estudo-doenca-cardiaca
+
+python -m venv .venv
+source .venv/bin/activate
+
+pip install -r requirements.txt
+```
