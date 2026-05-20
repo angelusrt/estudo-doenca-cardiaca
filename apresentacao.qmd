@@ -23,11 +23,21 @@ Algumas outras bases interessantes:
 - (Casos de Ataque Cardíaco)[https://archive.ics.uci.edu/dataset/519/heart+failure+clinical+records]
 - (Estudo cardíaco de Framingham)[https://www.kaggle.com/datasets/aasheesh200/framingham-heart-study-dataset]
 
-[TODO: Explorar estes datasets]
-
 ---
 
-[TODO: Pesquisar descobertas anteriores]
+Doenças cardiovasculares se tornaram a principal fonte de 
+mortalidade do século passado e isso impulsionou que a medicina 
+se tornasse preditiva, gerenciando risco.
+
+Em 1948, surgiu o estudo de coração de Framingham - com o uso de estatistica.
+
+E então se percebeu correlação com:
+- Fumo
+- Hipertensão
+- Colesterol alto
+- Risco por obesidade
+- Diabetes
+- Falta de exercício físico
 
 ---
 

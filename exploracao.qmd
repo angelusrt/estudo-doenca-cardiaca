@@ -1,6 +1,6 @@
 # Exploração do dataset de Doenças Cardíacas
 
-(Dataset vem desse link)[https://archive.ics.uci.edu/dataset/45/heart+disease]
+[Dataset vem desse link](https://archive.ics.uci.edu/dataset/45/heart+disease)
 
 ## Carregando Dataset
 
@@ -12,11 +12,10 @@ from ucimlrepo import fetch_ucirepo
 
 # fetch dataset 
 heart_disease = fetch_ucirepo(id=45) 
-  
-# data (as pandas dataframes) 
-y = heart_disease.data.targets 
-
 df = heart_disease.data.features.copy()
+
+assert isinstance(df, pd.DataFrame)
+
 df['target'] = heart_disease.data.targets['num']
 ```
 
@@ -28,7 +27,7 @@ Nota-se valores numéricos com graus distintos.
 df.head(10)
 ```
 
-## Entendo features
+## Entendendo features
 
 ```{python}
 df = df.sort_values(by='target', ignore_index=True)
@@ -44,41 +43,56 @@ df.plot(
 Não existem muitos valores nulos.
 
 ```{python}
-quantidade_nulos = df.isna().sum()
-
-df = df.fillna(0)
+df[df.isna().any(axis=1)]
 ```
-
-[TODO: revisar preenchimento de valores nulos.]
-[TODO: analisar distribuição de classes para verificar enviesamento.]
-
-## Normalizando atribudos
-
-Nós vamos usar a fórmula min-max para normalizar os atributos quantitativos para um valor entre 0 e 1.
 
 ```{python}
-df_norm = (df - df.min()) / (df.max() - df.min())
+print(f"relação 'nan/total': {(len(df[df.isna().any(axis=1)])/len(df)):0.2f}")
 ```
+
+Ou seja, faz sentido excluí-los.
+
+```{python}
+quantidade_nulos = df.isna().sum()
+df = df.dropna()
+```
+
+## Analisando distribuição de classes
+
+As classes são bem desiguais, o que torna um estudo preciso difícil.
+
+```{python}
+quantidade_de_targets = df["target"].value_counts()
+
+quantidade_de_targets
+```
+
+## Verificando duplicatas
+
+Como não há nenhum campo que sirva como identificador, 
+vamos presumir que a granularidade está definida por pessoas 
+diferentes.
+
+---
 
 ## Analisando matriz de correlação
 
 ```{python}
-df_norm.columns.tolist()
+df.columns.tolist()
 ```
 
 ```{python}
-df_norm = (df - df.min()) / (df.max() - df.min())
-
-pyplot.matshow(df_norm.corr())
+pyplot.matshow(df.corr())
 pyplot.show()
 ```
 
-Frequência cardíaca máxima não foi um bom preditor.
+Frequência cardíaca máxima não apresentou forte 
+correlação linear com outras variáveis.
 
 ```{python}
-df_norm = df_norm.drop(columns=['thalach'])
+df = df.drop(columns=['thalach'])
 
-pyplot.matshow(df_norm.corr())
+pyplot.matshow(df.corr())
 pyplot.show()
 ```
 
@@ -100,7 +114,7 @@ plt.show()
 Gráfico de disperção:
 
 ```{python}
-sns.stripplot(data=df_norm.drop(columns=["target"]), orient="h")
+sns.stripplot(data=df.drop(columns=["target"]), orient="h")
 plt.show()
 ```
 
@@ -118,53 +132,93 @@ sns.violinplot(data=df)
 plt.show()
 ```
 
+---
+
+## Preparando dataset para ML
+
+Isso inclui normalização dos datasets usando min-max para 
+por os valores entre 0 e 1 e _oversampling_ para corrigir 
+desbalanço de classes.
+
+```{python}
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
+from imblearn.over_sampling import RandomOverSampler
+
+scaler = MinMaxScaler()
+
+y = df['target']
+x = df.drop(columns=['target'])
+
+x_train, x_test, y_train, y_test = train_test_split(
+    x,
+    y,
+    stratify=y,
+    test_size=0.2,
+    random_state=42
+)
+
+x_train = scaler.fit_transform(x_train)
+x_test = scaler.transform(x_test)
+
+ros = RandomOverSampler(random_state=42)
+
+x_train, y_train = ros.fit_resample(x_train, y_train)
+
+print(y_train.value_counts())
+```
+
 ## Explorando árvores de decisão
 
 ```{python}
 from sklearn import tree
-from sklearn.metrics import accuracy_score
-
-df = df_norm.drop(columns=['target'])
+from sklearn.metrics import classification_report
 
 clf = tree.DecisionTreeClassifier()
-model = clf.fit(df, y)
-tree.plot_tree(model) 
+model = clf.fit(x_train, y_train)
 
-prediction = model.predict(df)
-acc = accuracy_score(y, prediction)
-print(f"Acurácia: {acc:0.2f}")
+tree.plot_tree(
+	model,
+    filled=True,
+    feature_names=x.columns,
+    class_names=True,
+    max_depth=1
+) 
+
+prediction = model.predict(x_test)
+print(classification_report(y_test, prediction))
 ```
 
 [TODO: melhorar visualização]
-[TODO: fazer divisão de dataset de treino e validação]
 
 ## Explorando Nearest Neighbours
 
 ```{python}
 from sklearn.neighbors import NearestNeighbors
-import numpy as np
 
 nbrs = NearestNeighbors(n_neighbors=2, algorithm='ball_tree')
-nbrs = nbrs.fit(df)
+nbrs = nbrs.fit(x)
 
-distances, indices = nbrs.kneighbors(df)
+distances, indices = nbrs.kneighbors(x)
 ```
 
 ```{python}
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import accuracy_score
 
 clf = Pipeline(
-    steps=[("scaler", StandardScaler()), ("knn", KNeighborsClassifier(n_neighbors=11))]
+    steps=[
+		("scaler", StandardScaler()), 
+		("knn", KNeighborsClassifier(n_neighbors=11))
+	]
 )
 
-model = clf.fit(df, y)
-prediction = model.predict(df)
-acc = accuracy_score(y, prediction)
-
-print(f"Acurácia: {acc:0.2f}")
+model = clf.fit(x_train, y_train)
+prediction = model.predict(x_test)
+print(classification_report(y_test, prediction))
 ```
 
-[TODO: melhorar visualização]
+[TODO: usar mais o Pipeline]
+[TODO: comparar diferentes modelos]
+[TODO: dá para melhorar mais]

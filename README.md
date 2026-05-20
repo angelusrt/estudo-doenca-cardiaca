@@ -32,6 +32,22 @@ O estudo compara a performance entre 5 modelos:
 | exang    | Categórico | Angina induzida por exercício                                         |         |
 | oldpeak  | Inteiro    | Depressão do segmento ST induzida por exercício em relação ao repouso |         |
 
+### Contexto
+
+Doenças cardiovasculares se tornaram a principal fonte de 
+mortalidade do século passado e isso impulsionou que a medicina 
+se tornasse preditiva, gerenciando risco.
+
+Em 1948, surgiu o estudo de coração de Framingham - com o uso de estatistica.
+
+E então se percebeu correlação com:
+- Fumo
+- Hipertensão
+- Colesterol alto
+- Risco por obesidade
+- Diabetes
+- Falta de exercício físico
+
 ## Nosso objetivo
 
 Fazer uma análise exploratória do estudo para conduzir um algoritmo ML 
