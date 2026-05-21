@@ -12,8 +12,11 @@ O modelo deve prever um número de 0 a 4, usando como base: idade, Sexo,  Dor no
 ---
 
 Nossos patrocinadores são:
+- Profissionais da área da saúde
+- Cardiologistas (Especialista da área)
+- Técnicos em radiologia
+- Administradores hospitalares envolvidos no fluxo de aprovações de exames
 - Desenvolvedores de Wearables de Saúde
-- Clínicas
 
 ---
 
@@ -58,7 +61,21 @@ Atributos usados:
 
 ---
 
-[TODO: adicionar slide contendo um head(10)]
+```{python}
+import pandas as pd
+from ucimlrepo import fetch_ucirepo 
+
+heart_disease = fetch_ucirepo(id=45) 
+df = heart_disease.data.features.copy()
+
+assert isinstance(df, pd.DataFrame)
+
+df['target'] = heart_disease.data.targets['num']
+```
+
+```{python}
+df.head(10)
+```
 
 ---
 
