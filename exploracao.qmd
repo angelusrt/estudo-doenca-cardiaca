@@ -2,13 +2,30 @@
 
 [Dataset vem desse link](https://archive.ics.uci.edu/dataset/45/heart+disease)
 
-## Carregando Dataset
-
+## Carregando Bibliotecas
 ```{python}
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
-from matplotlib import pyplot
 from ucimlrepo import fetch_ucirepo 
+
+from sklearn import tree
+from sklearn.metrics import classification_report
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
+from imblearn.over_sampling import RandomOverSampler
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+```
+
+## Carregando Dataset
+
+
+```{python}
 
 # fetch dataset 
 heart_disease = fetch_ucirepo(id=45) 
@@ -53,6 +70,10 @@ print(f"relação 'nan/total': {(len(df[df.isna().any(axis=1)])/len(df)):0.2f}")
 Ou seja, faz sentido excluí-los.
 
 ```{python}
+sns.heatmap(df.isna())
+```
+
+```{python}
 quantidade_nulos = df.isna().sum()
 df = df.dropna()
 ```
@@ -62,9 +83,7 @@ df = df.dropna()
 As classes são bem desiguais, o que torna um estudo preciso difícil.
 
 ```{python}
-quantidade_de_targets = df["target"].value_counts()
-
-quantidade_de_targets
+sns.countplot(x='target', data=df)
 ```
 
 ## Verificando duplicatas
@@ -82,8 +101,8 @@ df.columns.tolist()
 ```
 
 ```{python}
-pyplot.matshow(df.corr())
-pyplot.show()
+plt.matshow(df.corr())
+plt.show()
 ```
 
 Frequência cardíaca máxima não apresentou forte 
@@ -92,8 +111,8 @@ correlação linear com outras variáveis.
 ```{python}
 df = df.drop(columns=['thalach'])
 
-pyplot.matshow(df.corr())
-pyplot.show()
+plt.matshow(df.corr())
+plt.show()
 ```
 
 ## Explorando outros gráficos
@@ -101,10 +120,6 @@ pyplot.show()
 Gráfico de histograma:
 
 ```{python}
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-
 #sns.pairplot(df, hue="target")
 df.hist(figsize=(12, 8), bins=20)
 plt.tight_layout()
@@ -128,7 +143,7 @@ plt.show()
 Gráfico de violino:
 
 ```{python}
-sns.violinplot(data=df)
+sns.violinplot(data=df[["age", "trestbps", "chol"]])
 plt.show()
 ```
 
@@ -141,10 +156,6 @@ por os valores entre 0 e 1 e _oversampling_ para corrigir
 desbalanço de classes.
 
 ```{python}
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MinMaxScaler
-from imblearn.over_sampling import RandomOverSampler
-
 scaler = MinMaxScaler()
 
 y = df['target']
@@ -171,9 +182,6 @@ print(y_train.value_counts())
 ## Explorando árvores de decisão
 
 ```{python}
-from sklearn import tree
-from sklearn.metrics import classification_report
-
 clf = tree.DecisionTreeClassifier()
 model = clf.fit(x_train, y_train)
 
@@ -189,36 +197,89 @@ prediction = model.predict(x_test)
 print(classification_report(y_test, prediction))
 ```
 
-[TODO: melhorar visualização]
-
-## Explorando Nearest Neighbours
+## Explorando K-Means
 
 ```{python}
-from sklearn.neighbors import NearestNeighbors
+inertia = []
 
-nbrs = NearestNeighbors(n_neighbors=2, algorithm='ball_tree')
-nbrs = nbrs.fit(x)
+k_range = range(1, 11)
 
-distances, indices = nbrs.kneighbors(x)
+for k in k_range:
+    model = Pipeline(
+        steps=[
+            ("scaler", StandardScaler()),
+            ("kmeans", KMeans(
+                n_clusters=k,
+                random_state=42,
+                n_init="auto"
+            ))
+        ]
+    )
+
+    model.fit(x)
+
+    inertia.append(
+        model.named_steps["kmeans"].inertia_
+    )
+
+plt.plot(k_range, inertia, marker='o')
+plt.xlabel("Número de clusters")
+plt.ylabel("Inertia")
+plt.title("Método do Cotovelo")
+plt.show()
 ```
 
 ```{python}
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler
-
-clf = Pipeline(
+final_model = Pipeline(
     steps=[
-		("scaler", StandardScaler()), 
-		("knn", KNeighborsClassifier(n_neighbors=11))
-	]
+        ("scaler", StandardScaler()),
+        ("kmeans", KMeans(
+            n_clusters=3,
+            random_state=42,
+            n_init="auto"
+        ))
+    ]
 )
 
-model = clf.fit(x_train, y_train)
-prediction = model.predict(x_test)
-print(classification_report(y_test, prediction))
-```
+final_model.fit(x)
 
-[TODO: usar mais o Pipeline]
-[TODO: comparar diferentes modelos]
-[TODO: dá para melhorar mais]
+scaler = StandardScaler()
+scaled_x = scaler.fit_transform(x)
+
+pca = PCA(n_components=2)
+components = pca.fit_transform(scaled_x)
+
+clusters = final_model.named_steps["kmeans"].labels_
+
+df["cluster"] = clusters
+df.head()
+
+df.groupby("cluster").mean(numeric_only=True)
+
+kmeans = final_model.named_steps["kmeans"]
+
+centroids = pca.transform(
+    kmeans.cluster_centers_
+)
+
+plt.figure(figsize=(8, 6))
+
+plt.scatter(
+    components[:, 0],
+    components[:, 1],
+    c=clusters
+)
+
+plt.scatter(
+    centroids[:, 0],
+    centroids[:, 1],
+    s=300,
+    marker="X"
+)
+
+plt.xlabel("PC1")
+plt.ylabel("PC2")
+plt.title("KMeans Clusters with Centroids")
+
+plt.show()
+```

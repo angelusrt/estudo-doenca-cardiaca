@@ -1,7 +1,7 @@
 ---
 title: "Estudo de doenças cardíacas"
 author: "Angelus, Rafael, José, Matheus"
-format: revealjs
+format: pptx
 ---
 
 O estudo se refere a uma prediçâo sobre doenças cardíacas com base em 4 datasets diferentes 
