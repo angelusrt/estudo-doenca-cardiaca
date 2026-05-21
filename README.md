@@ -21,16 +21,16 @@ O estudo compara a performance entre 5 modelos:
 
 | Variável | Tipo       | Descrição                                                             | Unidade |
 | -------- | ---------- | --------------------------------------------------------------------- | ------- |
-| age      | Inteiro    | Idade                                                                 | anos    |
+| age      | Numérico   | Idade                                                                 | anos    |
 | sex      | Categórico | Sexo                                                                  |         |
 | cp       | Categórico | Tipo de dor no peito                                                  |         |
-| trestbps | Inteiro    | Pressão arterial em repouso (na admissão hospitalar)                  | mm Hg   |
-| chol     | Inteiro    | Colesterol sérico                                                     | mg/dl   |
+| trestbps | Numérico   | Pressão arterial em repouso (na admissão hospitalar)                  | mm Hg   |
+| chol     | Numérico   | Colesterol sérico                                                     | mg/dl   |
 | fbs      | Categórico | Glicemia em jejum > 120 mg/dl                                         |         |
 | restecg  | Categórico | Resultado do eletrocardiograma em repouso                             |         |
-| thalach  | Inteiro    | Frequência cardíaca máxima atingida                                   |         |
+| thalach  | Numérico   | Frequência cardíaca máxima atingida                                   |         |
 | exang    | Categórico | Angina induzida por exercício                                         |         |
-| oldpeak  | Inteiro    | Depressão do segmento ST induzida por exercício em relação ao repouso |         |
+| oldpeak  | Numérico   | Depressão do segmento ST induzida por exercício em relação ao repouso |         |
 
 ### Contexto
 

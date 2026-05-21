@@ -1,3 +1,4 @@
 *.quarto_*
 exploracao_files/*
 *.pptx
+.venv

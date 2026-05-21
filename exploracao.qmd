@@ -114,16 +114,6 @@ plt.matshow(df.corr())
 plt.show()
 ```
 
-Frequência cardíaca máxima não apresentou forte 
-correlação linear com outras variáveis.
-
-```{python}
-df = df.drop(columns=['thalach'])
-
-plt.matshow(df.corr())
-plt.show()
-```
-
 ## Explorando outros gráficos
 
 Gráfico de histograma:
@@ -138,7 +128,12 @@ plt.show()
 Gráfico de disperção:
 
 ```{python}
-sns.stripplot(data=df.drop(columns=["target"]), orient="h")
+sns.stripplot(data=df[["age", "trestbps", "chol", "thalach", "oldpeak"]], orient="h")
+plt.show()
+```
+
+```{python}
+sns.stripplot(data=df.drop(columns=["age", "trestbps", "chol", "thalach", "oldpeak"]), orient="h")
 plt.show()
 ```
 
