@@ -1,41 +1,72 @@
 ---
-title: "Estudo de doenças cardíacas"
+title: "Grupo de Doenças Cardíacas"
 author: "Angelus, Rafael, José, Matheus"
-format: pptx
+format:
+  revealjs:
+    theme: default
+    slide-number: true
+    toc: false
+    embed-resources: true
+    logo: ""
+    footer: "Universidade de Pernambuco"
+    highlight-style: github
+    code-fold: true
+lang: pt
 ---
 
-O estudo se refere a uma prediçâo sobre doenças cardíacas com base em 4 datasets diferentes 
-(Cleveland, Hungary, Switzerland, VA Long Beach - Cleveland é o mais promissor), contendo 76 atributos (14 usaveis)
+## Descrição do problema
 
-O modelo deve prever um número de 0 a 4, usando como base: idade, Sexo,  Dor no Peito, Pressão sanguinea, taxa de colesterol, etc.
+O estudo se refere a uma predição sobre doenças cardíacas com base em **4 datasets diferentes**
+(Cleveland, Hungary, Switzerland, VA Long Beach — Cleveland é o mais promissor),
+contendo **76 atributos** (14 usáveis).
+
+<br>
+
+Tem como objetivo determinar em uma **escala de 0 a 4** a probabilidade de incidência de
+doença cardíaca no paciente.
 
 ---
 
-Nossos patrocinadores são:
+## Stakeholders
+
+Os principais stakeholders envolvidos podem ser:
+
 - Profissionais da área da saúde
-- Cardiologistas (Especialista da área)
+- Cardiologistas (especialista da área)
 - Técnicos em radiologia
 - Administradores hospitalares envolvidos no fluxo de aprovações de exames
-- Desenvolvedores de Wearables de Saúde
+- Desenvolvedores de wearables de saúde
 
 ---
 
-Algumas outras bases interessantes:
-- (Marts de Medicina)[https://physionet.org/content/mimiciv/2.2/]
-- (Predição de Ataque Cardíaco)[https://www.kaggle.com/datasets/fedesoriano/heart-failure-prediction/data]
-- (Casos de Ataque Cardíaco)[https://archive.ics.uci.edu/dataset/519/heart+failure+clinical+records]
-- (Estudo cardíaco de Framingham)[https://www.kaggle.com/datasets/aasheesh200/framingham-heart-study-dataset]
+## Outros datasets relevantes
 
+**Marts de Medicina**
+
+- <https://physionet.org/content/mimiciv/2.2/>
+
+**Predição de Ataque Cardíaco**
+
+- <https://www.kaggle.com/datasets/fedesoriano/heart-failure-prediction/data>
+
+**Casos de Ataque Cardíaco**
+
+- <https://archive.ics.uci.edu/dataset/519/heart+failure+clinical+records>
+
+**Estudo cardíaco de Framingham**
+
+- <https://www.kaggle.com/datasets/aasheesh200/framingham-heart-study-dataset>
 
 ---
 
-Doenças cardiovasculares se tornaram a principal fonte de 
-mortalidade do século passado e isso impulsionou que a medicina 
-se tornasse preditiva, gerenciando risco.
+## Descobertas relacionadas ao projeto
 
-Em 1948, surgiu o estudo de coração de Framingham - com o uso de estatistica.
+Em **1948**, surgiu o estudo de coração de Framingham — com o uso de estatística.
+
+<br>
 
 E então se percebeu correlação com:
+
 - Fumo
 - Hipertensão
 - Colesterol alto
@@ -43,56 +74,315 @@ E então se percebeu correlação com:
 - Diabetes
 - Falta de exercício físico
 
-Fumo
-Hipertensão
-Colesterol alto
-Risco por obesidade
-Diabetes
-Falta de exercício físico
+---
+
+## Dicionário de dados
+
+| Col. Base Orig. | Nome da Coluna | Descrição |
+|:---:|:---|:---|
+| #3  | `age`      | Idade (inteiro) |
+| #4  | `sex`      | Sexo: 0=fem, 1=masc |
+| #9  | `cp`       | Tipo de dor no peito: 1=angina usual, 2=angina atípica, 3=não anginal, 4=assintomático |
+| #10 | `trestbps` | Pressão sang. em repouso (mmHg na admissão) |
+| #12 | `chol`     | Colesterol (mg/dl) |
+| #16 | `fbs`      | Nível de açucar em jejum: 0=abaixo de 120 mg/dl, 1=acima de 120 mg/dl |
+| #19 | `restecg`  | Eletrocardiograma em repouso: 0=normal, 1=anormalidade, 2=provável hipertrofia ventricular |
+| #32 | `thalach`  | Frequência cardíaca máxima atingida |
+| #38 | `exang`    | Angina induzida por exercício: 0=não, 1=sim |
+| #40 | `oldpeak`  | Depressão do segmento ST induzida por exercício (inteiro) |
+| #41 | `slope`    | Inclinação do pico do segmento ST: 1=positiva, 2=reta, 3=negativa |
+| #44 | `ca`       | Número de vasos principais que continham cálcio: 0 a 3 (inteiro) |
+| #51 | `thal`     | Defeito cintilográfico com tálio: 3=normal, 6=defeito fixo, 7=defeito reversível |
+| #58 | `num`      | Diagnóstico: 0 = <50% de redução do diâmetro, >1 = >50% de redução do diâmetro |
 
 ---
 
-Atributos usados:
+## Visualizando nosso dataset
 
-| Variável | Tipo       | Descrição                                                             | Unidade |
-| -------- | ---------- | --------------------------------------------------------------------- | ------- |
-| age      | Inteiro    | Idade                                                                 | anos    |
-| sex      | Categórico | Sexo                                                                  |         |
-| cp       | Categórico | Tipo de dor no peito                                                  |         |
-| trestbps | Inteiro    | Pressão arterial em repouso (na admissão hospitalar)                  | mm Hg   |
-| chol     | Inteiro    | Colesterol sérico                                                     | mg/dl   |
-| fbs      | Categórico | Glicemia em jejum > 120 mg/dl                                         |         |
-| restecg  | Categórico | Resultado do eletrocardiograma em repouso                             |         |
-| thalach  | Inteiro    | Frequência cardíaca máxima atingida                                   |         |
-| exang    | Categórico | Angina induzida por exercício                                         |         |
-| oldpeak  | Inteiro    | Depressão do segmento ST induzida por exercício em relação ao repouso |         |
-
----
+A base de dados utilizada já é reduzida da base original, que continha **76 atributos**.
 
 ```{python}
+#| echo: true
 import pandas as pd
-from ucimlrepo import fetch_ucirepo 
+from ucimlrepo import fetch_ucirepo
 
-heart_disease = fetch_ucirepo(id=45) 
+heart_disease = fetch_ucirepo(id=45)
 df = heart_disease.data.features.copy()
-
-assert isinstance(df, pd.DataFrame)
-
 df['target'] = heart_disease.data.targets['num']
-```
-
-```{python}
 df.head(10)
 ```
 
 ---
 
-[TODO: Descrever processo de redução, limpeza, transformação - 3 slides]
+## Análise descritiva
+
+Distribuição do target: `0=164, 1=55, 2=36, 3=35, 4=13`
+
+```{python}
+#| echo: true
+df.describe()
+```
 
 ---
 
-[TODO: Elaborar gráficos de histograma, dispersão, e boxplot usando algumas dimensões - 3 slides]
+## Redução da base
+
+Através da análise de correlações é possível ver que **2 variáveis numéricas** possuem
+baixa correlação com o target.
+
+Porém, pelo baixo número de features numéricas, não vamos removê-las.
+
+```{python}
+#| echo: true
+import matplotlib.pyplot as plt
+
+df_clean = df.dropna()
+plt.matshow(df_clean.corr(), fignum=1)
+plt.xticks(range(len(df_clean.columns)), df_clean.columns, rotation=90, fontsize=8)
+plt.yticks(range(len(df_clean.columns)), df_clean.columns, fontsize=8)
+plt.colorbar()
+plt.tight_layout()
+plt.show()
+```
 
 ---
 
-[TODO: Executar árvore de decisão e k-means - 2 slides]
+## Histograma
+
+```{python}
+#| echo: true
+df_clean.hist(figsize=(12, 8), bins=20)
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+## Dispersão de colunas numéricas
+
+```{python}
+#| echo: true
+import seaborn as sns
+
+sns.stripplot(
+    data=df_clean[["age", "trestbps", "chol", "thalach", "oldpeak"]],
+    orient="h"
+)
+plt.show()
+```
+
+---
+
+## Dispersão de colunas categóricas
+
+```{python}
+#| echo: true
+sns.stripplot(
+    data=df_clean.drop(columns=["age", "trestbps", "chol", "thalach", "oldpeak"]),
+    orient="h"
+)
+plt.show()
+```
+
+---
+
+## Box plot
+
+```{python}
+#| echo: true
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+
+df_clean[["age", "trestbps", "chol", "thalach"]].boxplot(ax=ax1)
+df_clean.drop(columns=["age", "trestbps", "chol", "thalach"]).boxplot(ax=ax2)
+
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+## Distribuição da doença baseada na idade
+
+Ausência: `target = 0` | Presença: `target > 0`
+
+```{python}
+#| echo: true
+df_binary = df_clean.copy()
+df_binary['target_label'] = df_binary['target'].apply(
+    lambda x: 'target=0' if x == 0 else 'target!=0'
+)
+
+sns.violinplot(data=df_binary, x='target_label', y='age')
+plt.xlabel("target")
+plt.show()
+```
+
+---
+
+## Distribuição da doença baseada em ECG
+
+Ausência: `target = 0` | Presença: `target > 0`
+
+```{python}
+#| echo: true
+df_binary['target_bin'] = (df_binary['target'] != 0).astype(str)
+df_binary['target_bin'] = df_binary['target_bin'].map(
+    {'False': 'target=0', 'True': 'target!=0'}
+)
+
+ct = pd.crosstab(df_binary['target_bin'], df_binary['restecg'])
+ct.plot(kind='bar', stacked=True, figsize=(6, 4))
+plt.title("Restecg por target")
+plt.xlabel("Target")
+plt.ylabel("Count")
+plt.xticks(rotation=0)
+plt.show()
+```
+
+---
+
+## Limpeza da base
+
+Poucos valores nulos, que não devem influenciar caso sejam removidos,
+por não influenciarem fortemente no balanço entre os dados target.
+
+A remoção de valores nulos resulta numa redução de **303 instâncias para 297**.
+
+```{python}
+#| echo: true
+sns.heatmap(df.isna())
+plt.show()
+```
+
+---
+
+## Transformação da base
+
+Desbalanceamento de classes — devemos considerar o balanço entre **ausência** (valor 0)
+e **presença** (valores de 1 a 4).
+
+```{python}
+#| echo: true
+from sklearn.preprocessing import MinMaxScaler
+from imblearn.over_sampling import RandomOverSampler
+from sklearn.model_selection import train_test_split
+
+scaler = MinMaxScaler()
+df_clean['target'] = (df_clean['target'] > 0).astype(int)
+
+y = df_clean['target']
+x = df_clean.drop(columns=['target'])
+
+x_train, x_test, y_train, y_test = train_test_split(
+    x, y, stratify=y, test_size=0.2, random_state=42
+)
+
+x_train_s = scaler.fit_transform(x_train)
+x_test_s  = scaler.transform(x_test)
+
+print("Distribuição original:")
+print(y.value_counts())
+```
+
+---
+
+## Modelo Decision Tree {.smaller}
+
+Modelo **com** balanceamento de classes (Treino: 80%, Teste: 20%, sem oversampling)
+
+```{python}
+#| echo: true
+from sklearn import tree
+from sklearn.metrics import classification_report, ConfusionMatrixDisplay
+
+clf = tree.DecisionTreeClassifier(random_state=42)
+model = clf.fit(x_train_s, y_train)
+
+tree.plot_tree(
+    model,
+    filled=True,
+    feature_names=x.columns,
+    class_names=True,
+    max_depth=3
+)
+plt.show()
+
+prediction = model.predict(x_test_s)
+print(classification_report(y_test, prediction))
+```
+
+---
+
+## Confusion Matrix — Decision Tree
+
+```{python}
+#| echo: true
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+
+cm = confusion_matrix(y_test, prediction)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=model.classes_)
+disp.plot(cmap='Blues')
+plt.title("Confusion Matrix")
+plt.show()
+```
+
+---
+
+## Modelo K-Means
+
+Avaliação de grupos para K-Means = 2, com redução PCA.
+
+```{python}
+#| echo: true
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
+
+x_km = df_clean.drop(columns=['target'])
+
+inertia = []
+k_range = range(1, 11)
+
+for k in k_range:
+    m = Pipeline([
+        ("scaler", StandardScaler()),
+        ("kmeans", KMeans(n_clusters=k, random_state=42, n_init="auto"))
+    ])
+    m.fit(x_km)
+    inertia.append(m.named_steps["kmeans"].inertia_)
+
+plt.plot(k_range, inertia, marker='o')
+plt.xlabel("Número de clusters")
+plt.ylabel("Inertia")
+plt.title("Método do Cotovelo")
+plt.show()
+```
+
+---
+
+## K-Means — Clusters com Centroides
+
+```{python}
+#| echo: true
+final_model = Pipeline([
+    ("scaler", StandardScaler()),
+    ("kmeans", KMeans(n_clusters=2, random_state=42, n_init="auto"))
+])
+final_model.fit(x_km)
+
+scaler_pca = StandardScaler()
+scaled_x   = scaler_pca.fit_transform(x_km)
+pca        = PCA(n_components=2)
+components = pca.fit_transform(scaled_x)
+clusters   = final_model.named_steps["kmeans"].labels_
+centroids  = pca.transform(final_model.named_steps["kmeans"].cluster_centers_)
+
+plt.figure(figsize=(8, 6))
+plt.scatter(components[:, 0], components[:, 1], c=clusters, alpha=0.7)
+plt.scatter(centroids[:, 0], centroids[:, 1], s=300, marker="X", c="cyan", edgecolors="black")
+plt.xlabel("PC1")
+plt.ylabel("PC2")
+plt.title("KMeans Clusters with Centroids")
+plt.show()
+```

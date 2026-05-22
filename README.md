@@ -64,6 +64,11 @@ Esse estudo universitário deve conter:
 - Uso de ML: Árvore de decisão e K-means
 - Contar um bom story-tellings com o dado
 
+## Agradecimentos
+
+Agradeço a @rafa-santos55 por ter contribuido com esse projeto e ter tido 
+iniciativa com a apresentação - tamo junto!
+
 ## Setup
 
 ```bash
