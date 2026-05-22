@@ -238,7 +238,7 @@ final_model = Pipeline(
     steps=[
         ("scaler", StandardScaler()),
         ("kmeans", KMeans(
-            n_clusters=3,
+            n_clusters=2,
             random_state=42,
             n_init="auto"
         ))
@@ -287,3 +287,145 @@ plt.title("KMeans Clusters with Centroids")
 
 plt.show()
 ```
+
+---
+
+## Preparação alternativa
+
+Nessa abordagem, a gente reduziu os valores de 0 a 4 para 0 a 1.
+
+```{python}
+scaler = MinMaxScaler()
+
+#df[df['target'] > 0] = 1
+df['target'] = (df['target'] > 0).astype(int)
+df = df.drop(columns=["cluster"])
+
+y = df['target']
+x = df.drop(columns=['target'])
+
+x_train, x_test, y_train, y_test = train_test_split(
+    x,
+    y,
+    stratify=y,
+    test_size=0.2,
+    random_state=42
+)
+
+x_train = scaler.fit_transform(x_train)
+x_test = scaler.transform(x_test)
+
+print(y_train.value_counts())
+```
+
+## Nova distribuição de classes
+
+```{python}
+sns.countplot(x='target', data=df)
+```
+
+## Explorando árvores de decisão
+
+```{python}
+clf = tree.DecisionTreeClassifier()
+model = clf.fit(x_train, y_train)
+
+tree.plot_tree(
+	model,
+    filled=True,
+    feature_names=x.columns,
+    class_names=True,
+    max_depth=3
+) 
+
+prediction = model.predict(x_test)
+print(classification_report(y_test, prediction))
+```
+
+## Explorando K-Means
+
+```{python}
+inertia = []
+
+k_range = range(1, 11)
+
+for k in k_range:
+    model = Pipeline(
+        steps=[
+            ("scaler", StandardScaler()),
+            ("kmeans", KMeans(
+                n_clusters=k,
+                random_state=42,
+                n_init="auto"
+            ))
+        ]
+    )
+
+    model.fit(x)
+
+    inertia.append(
+        model.named_steps["kmeans"].inertia_
+    )
+
+plt.plot(k_range, inertia, marker='o')
+plt.xlabel("Número de clusters")
+plt.ylabel("Inertia")
+plt.title("Método do Cotovelo")
+plt.show()
+```
+
+```{python}
+final_model = Pipeline(
+    steps=[
+        ("scaler", StandardScaler()),
+        ("kmeans", KMeans(
+            n_clusters=2,
+            random_state=42,
+            n_init="auto"
+        ))
+    ]
+)
+
+final_model.fit(x)
+
+scaler = StandardScaler()
+scaled_x = scaler.fit_transform(x)
+
+pca = PCA(n_components=2)
+components = pca.fit_transform(scaled_x)
+
+clusters = final_model.named_steps["kmeans"].labels_
+
+df["cluster"] = clusters
+df.head()
+
+df.groupby("cluster").mean(numeric_only=True)
+
+kmeans = final_model.named_steps["kmeans"]
+
+centroids = pca.transform(
+    kmeans.cluster_centers_
+)
+
+plt.figure(figsize=(8, 6))
+
+plt.scatter(
+    components[:, 0],
+    components[:, 1],
+    c=clusters
+)
+
+plt.scatter(
+    centroids[:, 0],
+    centroids[:, 1],
+    s=300,
+    marker="X"
+)
+
+plt.xlabel("PC1")
+plt.ylabel("PC2")
+plt.title("KMeans Clusters with Centroids")
+
+plt.show()
+```
+
